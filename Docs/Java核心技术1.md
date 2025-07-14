@@ -61,11 +61,22 @@ ps：
 ps:
   - 有三个特殊的浮点数值表示溢出和出错情况：正无穷大(Double.INFINITY)，负无穷大(Double.NEGATIVA_INFINITY)，NaN(Double.NaN)。
   - eg: 一个正正数除以0，结果为正无穷大。计算0/0或者负数的平方根除以0，结果为NaN。
-```bash
-if (x == Double.NaN) {}
-// is Never true 所有NaN都认为是不相同的
-if (Double.isNaN(x)) {} 
-//但是可以使用函数判断
+
+```java
+class Main {
+    public static void main(String[] args) {
+        double x = Double.NaN;
+        // is Never true 所有NaN都认为是不相同的
+        if (x == Double.NaN) {
+            System.out.println("x == NaN");
+        }
+        //但是可以使用函数判断
+        if (Double.isNaN(x)) {
+            System.out.println("x is NaN");
+        }
+        //x is NaN
+    }
+}
 ```
 
 3. char
@@ -75,6 +86,7 @@ if (Double.isNaN(x)) {}
     - U+0000~U+FFFF:第一个代码平面，基本多语言平面，每个字符用16位表示，通常成为代码单元。
     - U+10000~U+10FFFF，包含各种辅助字符，而辅助字符编码为一对连续的代码单元。 
 ps: 不要在程序中使用char来表示字符，除非确实需要处理UTF-16代码单元，应该使用String。
+
 4. boolean
 - 整型值和boolean之间不能相互转换。
 
@@ -85,8 +97,147 @@ ps: 不要在程序中使用char来表示字符，除非确实需要处理UTF-16
 ps: Java10开始，对于局部变量，可以从变量的初始值推断出他的类型，因此可以不声明变量类型。
 3. 常量
 - fianl 指示常量，表示这个变量只能被赋值一次，一旦被赋值就不能更改了。常量名使用全大写。
+- static关键字表示静态的，被static修饰的属性是静态变量，属于类而不是某个对象。
+4. 枚举类型
+有限个命名值
 ## 3.5 字符串
-## 3.6 输入输出
-## 3.7 控制流
+1. 算数运算符
+2. 数学函数与常量，Math类，如果需要结果严格精确，可以使用StrictMath类，他实现了可自由分发数据库，确保所有平台结果都是相同的。
+3. 数值类型转换
+4. 强制类型转换
+   浮点型转为整型的时候，通过截断小数部分的浮点值转换为整型。如果想舍入(round)一个浮点数来得到最接近的正数，可以使用Math.round()方法，但该方法返回long。
+5. 赋值
+6. 自增自减：n++，先使用变量之后在+1，++n,先+1之后在使用变量。
+7. 关系和boolean运算符:&& 和 || 安装短路的方式求值。
+8. 条件运算符：condition？expression1：expression2
+9. switch表达式(Java14引入)：
+```java
+class Main {
+    public static void main(String[] args) {
+        int seasonCode=2;
+        String seasonName=switch (seasonCode) {
+            case 1 -> "Spring";
+            case 2 -> "Summer";
+            case 3 -> "Fall";
+            case 4 -> "Winter";
+            default -> "Invalid Season Code";
+        };
+        System.out.println(seasonName);
+        //枚举类型不用添加default
+        enum Season {
+            SPRING, SUMMER, FALL, WINTER
+        }
+        Season season=Season.SUMMER;
+        switch (season) {
+            case SPRING -> System.out.println("Spring");
+            case SUMMER -> System.out.println("Summer");
+            case FALL -> System.out.println("Fall");
+            case WINTER -> System.out.println("Winter");
+        }
+    }
+}
+```
+10. 位运算符
+&：按位与，两个操作数都为1时，结果为1，否则为0。
+|：按位或，两个操作数都为0时，结果为0，否则为1。
+~：按位非，将操作数取反。-x=~x+1,~5=-6,因为按位取反之后获取的是补码。补码转换成原码：将补码的符号位不变，其余各位取反，末位加一。
+^：按位异或，两个操作数不同时，结果为1，否则为0。
+>>: 位移运算符，左移为<<，右移为>>。补符号位扩展：填充一定位数的符号位（非负数填充0，负数填充1）。
+>>>: 位移无符号右移，将操作数向右移动指定位数，低位丢弃，高位补0。补零扩展：填充一定位数的0。 
+
+## 3.6 字符串
+1. 子串：String类下的substring(int beginIndex,int endIndex)实现,包含起始索引不包含结束索引的子串。
+```java
+class Main {
+    public static void main(String[] args) {
+        String greeting="Welcome";
+        System.out.println(greeting.length());//7
+        System.out.println(greeting.substring(0,7));// Welcome
+    }
+}
+```
+2. 拼接：
+    使用+号 
+    String类下的concat()方法。
+    若需要把多个字符串放在一起，用一个界定符分隔，用String类下的join()方法。
+    java11还引入repeat复制多个字符串。
+```java
+class Main {
+    public static void main(String[] args) {
+        String string1= "Hello ";
+        String string2= "World";
+        String string3= string1 + string2;
+        System.out.println(string3);//Hello World
+        String  string4= string3.concat("!!!");
+        System.out.println(string4);//Hello World!!!
+        String string5=String.join(" / ",string1,string2);
+        System.out.println(string5);//Hello / World
+        String string6=string1.repeat(4);
+        System.out.println(string6);//Hello Hello Hello Hello
+    }
+}
+```
+3. 字符串不可变，编译器可以让字符串共享。
+4. 检测字符串是否相等。
+5. 空串：""，null。
+6. 码点和代码单元
+    length方法将返回采用UTF-16编码的字符串所需要的代码单元的个数，而codePointCount方法将返回采用UTF-16编码的码点个数。
+    使用UTF-16编码表示字符U+1D546，需要两个代码单元，charAt(0)返回第一个代码单元，charAt(1)返回第二个代码单元。
+7. String的API
+8. 阅读联机API文档
+9. 构建字符串：StringBuilder,StringBuffer效率不如StringBuilder，但是他允许采用多线程的方式添加或删除字符，StringBuffer线程安全。
+```java
+class Main {
+    public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Welcome to ");
+        sb.append("Java Programming!");
+        //toString()方法将StringBuilder对象转换成String对象
+        String s = sb.toString();
+        System.out.println(s);
+    }
+}
+```
+10. 文本块：java15引入，以"""开始，以"""结束，中间可以包含任意字符，包括换行符。行尾\会把这一行与下一行连接起来。
+## 3.7 输入与输出
+1. 读取输入：Scanner类。
+```java
+import java.util.Objects;
+import java.util.Scanner;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner in= new Scanner(System.in);
+        String a=in.next() ;
+        System.out.println("Enter a string: "+a);
+        double b=in.nextDouble();
+        System.out.println("Enter a number: "+b);
+    }
+}
+```
+因为输入对所有人可见，所以Scanner类不适用于控制台读取密码。可以使用Console类。
+```java
+import java.io.Console;
+import java.util.Objects;
+
+class Main {
+    public static void main(String[] args) {
+// 如果Java程序要与windows下的cmd或者Linux下的Terminal交互，就可以使用这个Java Console类代劳。
+// Java要与Console进行交互，不总是能得到可用的Java Console类的。
+// 一个JVM是否有可用的Console，依赖于底层平台和JVM如何被调用。
+// 如果JVM是在交互式命令行（比如Windows的cmd）中启动的，并且输入输出没有重定向到另外的地方，那么就可以得到一个可用的Console实例。
+//但当使用Eclipse等IDE运行以上代码时Console中将会为null。
+//表示Java程序无法获得Console实例，是因为JVM不是在命令行中被调用的，或者输入输出被重定向了。
+//在Eclipse诸如类似的IDE工具中运行Console类。如果没有对Console实例判空操作，结果使用了该实例会抛出java.lang.NullPointerException异常。
+        Console console = System.console();
+        String username=console.readLine("Username: ");
+        String password=new String(console.readPassword("Password: "));
+        System.out.println(Objects.equals(username, "admin") && Objects.equals(password, "admin"));
+    }
+}
+```
+2. 格式化输出
+3. 文件输入与输出
+
 ## 3.8 大数
 ## 3.9 数组

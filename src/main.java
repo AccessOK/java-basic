@@ -1,22 +1,13 @@
+import java.io.Console;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.Scanner;
+
 class Main {
-    public static void main(String[] args) {
-//        Integer num1=127;
-//        Integer num2=127;
-//        if(num1==num2){
-//            System.out.println("Equal");
-//        }
-//        else{
-//            System.out.println("Not Equal");
-//        }
-//        if(num1.equals(num2)){
-//            System.out.println("Equal1");
-//        }
-//        else{
-//            System.out.println("Not Equal1");
-//        }
-        String str= null;
-        StringBuffer sb= new StringBuffer();
-        sb.append(str);
-        System.out.println(sb);
+    public static void main(String[] args) throws IOException {
+        //读取文件
+        Scanner in=new Scanner(Path.of("D:\\AccessOK\\java\\java-basic\\src\\demo\\file.txt"),"UTF-8");
+
     }
 }
