@@ -422,3 +422,97 @@ class Main {
 }
 ```
 8. 不规则数组：二维数组可以看做是一维数组的数组，不规则数组即为数组的没有一行有不同的长度。
+```java
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Scanner;
+
+class Main {
+    public static void main(String[] args) {
+        //定义一个不规则数组
+        final int MAX=10;
+        int[][] odds=new int[MAX+1][];
+        for(int i=0;i<=MAX;i++){
+            odds[i]=new int[i+1];
+        }
+    }
+}
+```
+# 对象与类
+
+## 面向对象程序设计概述
+
+1. 类
+2. 对象
+3. 识别类：名词方便识别的类
+4. 类之间的关系：依赖、聚合、继承
+
+## 使用预定义类
+
+1. 对象与对象变量：构造器与类同名。
+2. Java类库中的LocalDate类：日历表示法。创建对象：LocalDate.now()//静态工厂方法
+3. 更改器方法与访问器方法：更改器方法原对象改变，访问器方法只根据原对象数据创建新对象并返回。
+```java
+package CalendarTest;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+
+public class CalenderTest {
+    public static void main(String[] args) {
+        //显示当前月的日历
+        LocalDate date = LocalDate.now();
+        //获取当前月份和日期
+        int month = date.getMonthValue();
+        int today = date.getDayOfMonth();
+        //将Date设置为这个月的第一天，并获取星期，
+        //minusDays()方法返回一个LocalDate对象，该对象表示当前日期减去指定天数
+        date = date.minusDays(today-1);
+        DayOfWeek weekday = date.getDayOfWeek();
+        int value = weekday.getValue(); //1=Monday, 7=Sunday
+
+        System.out.println("Mon Tue Wed Thu Fri Sat Sun");
+        for (int i = 1; i < value; i++)
+            System.out.print("    ");
+        //显示当前月
+        while (date.getMonthValue() == month){
+            System.out.printf("%3d", date.getDayOfMonth());
+            if (date.getDayOfMonth() == today){
+                System.out.print("*");
+            }else System.out.print(" ");
+            //date 往后一天，直到当前月结束
+            date = date.plusDays(1);
+            if (date.getDayOfWeek().getValue() == 1){
+                System.out.println();
+            }
+        }
+    }
+}
+```
+
+## 自定义类
+
+1. Employee类：一个源文件中只能有一个公共类，但是可以有任意数量的非公共类。
+2. 使用多个源文件
+3. 剖析Employee类
+4. 从构造器开始：构造器总是结合new操作符来调用，构造器没有返回值，Java对象都是在堆中构造的。
+5. 用var声明局部变量(Java10引入)：如果局部变量可以根据局部变量的初始值推导出他们的类型，可以使用var声明局部变量。
+6. 使用null引用：基本类型不会为null。引用类型可以赋值为null。
+7. 隐式参数和显示参数：隐式参数是方法调用时，方法参数列表中的第一个参数，可以是实例类型的对象，this。显示参数是方法调用时，方法参数列表中的实际参数。
+8. 封装的优点：set/get方法封装字段可以保护字段不受外界的破坏，可以在方法里做特殊处理。
+9. 基于类的访问权限：一个类的方法可以访问这个类的所有对象的私有数据。
+10. 私有方法:private。
+11. final实例字段：必须在狗仔对象时初始化，并且不能再修改这个字段，所以final修饰的字段没有set方法。对象引用也不会再指向另一个不同的对象。
+
+## 静态字段和静态方法
+
+1. 静态字段：static，每个静态字段只有一个副本，可以认为静态字段属于类，而不属于单个对象。该类的所有对象共享该变量。
+2. 静态常量：static final。静态常量必须被初始化，并且不能被修改。
+3. 静态方法：static。静态方法只能访问静态字段。属于类不属于对象，所以静态方法没有隐士参数。
+4. 工厂方法：使用静态工厂方法构造对象。创建静态工厂类创建对象。
+5. main方法：main方法不对任何对象进行操作，启动程序时还没有任何对象。将执行静态main方法，并构造城西所需要的对象。
+
+## 方法参数
+
