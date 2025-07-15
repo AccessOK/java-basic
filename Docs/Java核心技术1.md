@@ -352,3 +352,73 @@ class Main {
 2. 访问数组元素：索引从0开始。
 3. for each循环：for(variable : collection) { },collection是数组或实现了Iterable的对象。
 4. 数组拷贝：引用变量拷贝，数组可以使用Arrays.copyOf(number[], int)。
+5. 命令行参数
+```java
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Scanner;
+
+class Main {
+    //main函数接收一个字符串数组作为参数
+    public static void main(String[] args) {
+        if(args.length==0||args[0].equals("-h")){
+            System.out.println("Helo");
+        }
+        else if(args[0].equals("-g")){
+            System.out.println("Goodbye");
+        }
+        for(int i=0;i<args.length;i++){
+            System.out.println(args[i]);
+        }
+        System.out.println("!");
+    }
+}
+```
+6. 数组排序：对值类型排序可以使用Arrays.sort(number[]),对对象排序需要实现Comparable接口。
+7. 多维数组：double[][] matrix = new double[3][4];
+```java
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Scanner;
+
+class Main {
+    //main函数接收一个字符串数组作为参数
+    public static void main(String[] args) {
+        final double STARTRATE = 10;
+        final int NRATES = 6;
+        final int NYEARS = 10;
+        double[] interestRate = new double[NRATES];
+        //定义单元行数据
+        for (int i = 0; i < interestRate.length; i++) {
+            interestRate[i] = (STARTRATE + i) / 100.0;
+        }
+        double[][] balances = new double[NYEARS][NRATES];
+        //二维数组第一行数据填充
+        for (int i = 0; i < interestRate.length; i++){
+            balances[0][i] = 10000;
+        }
+        for (int i = 1; i < balances.length; i++) {
+            for (int j = 0; j < balances[i].length; j++) {
+                double oldBalance = balances[i-1][j];
+                double interest = oldBalance * interestRate[j];
+                balances[i][j] = oldBalance + interest;
+            }
+        }
+        //输出一行的数据
+        for (int i = 0; i < interestRate.length; i++){
+            System.out.printf("%9.0f%%", interestRate[i] * 100);
+        }
+        for (double[] row : balances) {
+            for (double b: row){
+                System.out.printf("%10.2f", b);
+            }
+            System.out.println();
+        }
+    }
+}
+```
+8. 不规则数组：二维数组可以看做是一维数组的数组，不规则数组即为数组的没有一行有不同的长度。
