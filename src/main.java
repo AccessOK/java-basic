@@ -1,13 +1,18 @@
-import java.io.Console;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Objects;
 import java.util.Scanner;
 
 class Main {
-    public static void main(String[] args) throws IOException {
-        //读取文件
-        Scanner in=new Scanner(Path.of("D:\\AccessOK\\java\\java-basic\\src\\demo\\file.txt"),"UTF-8");
+    public static void main(String[] args) {
+        if(args.length==0||args[0].equals("--help")){
+            System.out.println("Usage: java Main [--help] [--input <file>] [--output <file>]");
+        }
+        else if(args[0].equals("-g")){
+            System.out.println("Quiet moe");
+
+        }
 
     }
 }

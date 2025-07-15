@@ -110,33 +110,7 @@ ps: Java10开始，对于局部变量，可以从变量的初始值推断出他�
 6. 自增自减：n++，先使用变量之后在+1，++n,先+1之后在使用变量。
 7. 关系和boolean运算符:&& 和 || 安装短路的方式求值。
 8. 条件运算符：condition？expression1：expression2
-9. switch表达式(Java14引入)：
-```java
-class Main {
-    public static void main(String[] args) {
-        int seasonCode=2;
-        String seasonName=switch (seasonCode) {
-            case 1 -> "Spring";
-            case 2 -> "Summer";
-            case 3 -> "Fall";
-            case 4 -> "Winter";
-            default -> "Invalid Season Code";
-        };
-        System.out.println(seasonName);
-        //枚举类型不用添加default
-        enum Season {
-            SPRING, SUMMER, FALL, WINTER
-        }
-        Season season=Season.SUMMER;
-        switch (season) {
-            case SPRING -> System.out.println("Spring");
-            case SUMMER -> System.out.println("Summer");
-            case FALL -> System.out.println("Fall");
-            case WINTER -> System.out.println("Winter");
-        }
-    }
-}
-```
+9. switch表达式：通过String判断
 10. 位运算符
 &：按位与，两个操作数都为1时，结果为1，否则为0。
 |：按位或，两个操作数都为0时，结果为0，否则为1。
@@ -238,6 +212,143 @@ class Main {
 ```
 2. 格式化输出
 3. 文件输入与输出
+```java
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Scanner;
 
-## 3.8 大数
-## 3.9 数组
+class Main {
+    public static void main(String[] args) throws IOException {
+        //读取文件
+        Scanner in=new Scanner(Path.of("D:\\AccessOK\\java\\java-basic\\src\\demo\\file.txt"), StandardCharsets.UTF_8);
+        System.out.println(in.nextLine());
+        in.close();
+        //写入文件：PrintWriter覆盖文件内容，会new File
+        PrintWriter out=new PrintWriter("D:\\AccessOK\\java\\java-basic\\src\\demo\\file.txt", StandardCharsets.UTF_8);
+        out.println("Hello World!");
+        out.close();
+    }
+}
+```
+## 3.8 控制流程
+1. 块作用域，块作用域的变量不能在块外访问，且不能重复声明。
+2. 条件语句：if(){}else{}
+3. 循环：
+- while(){}
+```java
+package Retirement;
+
+import java.util.Scanner;
+
+public class Retirement {
+    public static void main(String[] args) {
+        //攒够多少钱才能退休
+        Scanner sc = new Scanner(System.in);
+        System.out.print("How much money do you need to retire?: ");
+        double goal = sc.nextDouble();
+        System.out.print("How much money will you contribute every year?: ");
+        double payment = sc.nextDouble();
+        System.out.print("Interest rate in %: ");
+        double interestRate = sc.nextDouble();
+        double balance = 0;
+        int years = 0;
+        while (balance < goal){
+            balance = (balance + payment) * (1 + interestRate/100);
+            years++;
+        }
+        System.out.println("You can retire in " + years + " years.");
+    }
+}
+```
+- do while(){}
+```java
+package Retirement;
+
+import java.util.Scanner;
+
+public class Retirement2 {
+    public static void main(String[] args) {
+        //账户每年能攒下多少钱，钱到手之后在询问是否退休
+        Scanner sc = new Scanner(System.in);
+        System.out.print("How much money will you contribute every year? ");
+        double payment = sc.nextDouble();
+        System.out.println("Interest rate in %:");
+        double interestRate = sc.nextDouble();
+        double balance = 0;
+        int years = 0;
+        String input;
+        do {
+            balance = (balance + payment) * (1 + interestRate/100);
+            years++;
+            System.out.println("After " + years + " years you have " + balance);
+            System.out.print("Do you want to make another payment? (y/n): ");
+            input = sc.next();
+        } while (input.equals("y"));
+    }
+}
+```
+4. 确定性循环：for(){},for(double x=0;x!=10;X+=0.1)可能永远不会结束，由于存在舍入误差，可能永远不能达到精确的最终值。
+```java
+package LotteryOdds;
+
+import java.util.Scanner;
+
+public class LotteryOdds {
+    public static void main(String[] args) {
+        //从n个数中选择k个数字，中将的概率
+        Scanner in = new Scanner(System.in);
+        System.out.print("How many numbers do you need to draw? ");
+        int k = in.nextInt();
+        System.out.print("What is the highest number you can draw? ");
+        int n = in.nextInt();
+        int lotteryOdds = 1;
+        for (int i = 1; i <= k; i++)
+            lotteryOdds = lotteryOdds * (n - i + 1) / i;
+        System.out.println("Your odds are 1 in " + lotteryOdds + ". Good luck!");
+    }
+}
+```
+5. 多重选择：switch(expression){case value1:break;case value2:break;default:break;}，从选择值相匹配的case开始执行，直到遇到break或者default。
+    如果忘记i俺家忘记break，那么case后面的代码会继续执行，直到遇到break或者default。
+```java
+//java14对格式做了修改
+//以箭头-> 结束则没有直通行为，以冒号:结束则有直通行为
+class Main {
+    public static void main(String[] args) {
+        int seasonCode=2;
+        String seasonName=switch (seasonCode) {
+            case 1 -> "Spring";
+            case 2 -> "Summer";
+            case 3 -> "Fall";
+            case 4 -> "Winter";
+            case 5 -> {
+                System.out.println("Invalid Season Code");
+                //如果需要执行代码块，则需要使用yield
+                yield "Invalid Season Code";
+            }
+            default -> "Invalid Season Code";
+        };
+        System.out.println(seasonName);
+        //枚举类型不用添加default
+        enum Season {
+            SPRING, SUMMER, FALL, WINTER
+        }
+        Season season=Season.SUMMER;
+        switch (season) {
+            case SPRING -> System.out.println("Spring");
+            case SUMMER -> System.out.println("Summer");
+            case FALL -> System.out.println("Fall");
+            case WINTER -> System.out.println("Winter");
+        }
+    }
+}
+```
+6. 控制流程的语句：带标签的break。标签必须放在你想跳出的最外层循环之前，并且必须紧跟一个冒号。执行带标签的break会跳转到带标签的语句块末尾。
+## 3.9 大数 ： BigInteger类和BigDecimal类
+## 3.10 数组
+1. 数组声明，数组长度不要求是常量，但是一旦创建了数组，就不能在改变他的长度。
+2. 访问数组元素：索引从0开始。
+3. for each循环：for(variable : collection) { },collection是数组或实现了Iterable的对象。
+4. 数组拷贝：引用变量拷贝，数组可以使用Arrays.copyOf(number[], int)。
