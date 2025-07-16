@@ -530,3 +530,54 @@ Java总时采用按值调用，方法会得到所有参数值的一个副本。�
 8. 对象析构与finalize方法：防止一些清理代码，当对象不在使用可能需要执行这些清理代码。但是Java会完成自动的垃圾回收，所以Java不支持析构器。
 
 ## 记录
+
+1. 记录概念：根据record关键字自动生成set，get，equals，hashCode，toString方法。
+2. 构造器：标准、自定义和简洁。
+
+## 包
+
+1. 包名：为了保证包名的绝对唯一性，可以使用因特网域名以逆序的形式作为报名。然后对于不同的项目使用子包。
+2. 类的导入：import
+3. 静态导入：import static，导入静态方法和字段，而不必加类名前缀。
+4. 在包中增加类：将报名放在源文件开头，package。如果包与目录不匹配，虚拟机就找不到这些类。
+5. 包访问：default 访问权限，包中所有的类都可以访问该变量。
+6. 类路径：所有包含类文件的路径集合。类路径所列出的目录和归档文件时搜寻类的起始点。类路径包括基目录、当前目录、Jar文件。
+7. 设置类路径： java --classpath /PATH/TO/CLASS
+
+## JAR文件
+
+1. 创建JAR文件：jar cvf jar-file input-file-specification
+2. 清单文件：MANIFEST.MF，位于META-INF目录下。jar cfm/ufm MANIFEST.MF jar-file input-file-specification
+3. 可执行JAR文件：jar 命令可以使用e指定程序的入口。或者通过Main-class设置主类。
+4. 多版本Jar文件：特定于版本的类文件放在META-INF/versions目录下。构建多版本JAR文件，可以使用-X，对应每个版本要切换到一个不同的类文件目录。面向不同版本编译是，要使用--release和-指定版本和输出目录。
+```bash
+jar cf MyProject.jar -C bin/8 . -C MyProject/bin/9 --release 9 Application.class
+```
+5. 关于命令行选项的说明：
+
+## 文档注释
+
+1. 注释的插入：javadoc可以有源文件生成html文档。/**....*/
+2. 类注释：类注释必须放在import之后，clss定义之前。
+3. 方法注释：@param 参数描述，@return 返回值描述，@throws 抛出异常描述。
+4. 字段注释：
+5. 通用注释：@author 作者，@version 版本号，@since 从哪个版本开始使用。@see 参考的类或方法。@link 链接。
+6. 包注释：在每个包目录中添加一个单独的文件。package-info.java或package.html。
+7. 注释提取
+```bash
+javadoc -d docs -sourcepath src -subpackages com.example.demo
+```
+
+## 类设计技巧
+
+- 保证数据私有
+- 一定要初始化数据
+- 不要在类中使用过多的基本类型
+- 不是所有字段都需要单独的访问器和更改器
+- 分解过多职责的类
+
+# 继承
+
+## 类、超类、子类
+
+1. 定义子类：extends继承，
