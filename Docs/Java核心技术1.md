@@ -590,5 +590,43 @@ javadoc -d docs -sourcepath src -subpackages com.example.demo
 多态：一个对象变量可以指示多种实际类型。
 动态绑定：在运行时能够自动的选择适当的方法，引用的哪个类型就调用引用类型的方法。
 ```
+4. 继承层次结构
+5. 多态：需要超类对象的任何地方都可以使用子类对象替换。
+6. 理解方法调用：
+7. 阻止继承: final类和方法。如果一个方法没有被覆盖并且很短，编译器会对其进行优化处理，成为内联。
+8. 强制类型转换：只能在继承层次结构内进行强制类型转换。在将超类强制转换成子类之前，应该使用instanceof进行检查。
+9. instanceof模式匹配：强制类型转换之前判断是否是子类。
+10. 受保护访问：继承关系中的类可以访问protected成员。
 
-4. 
+## Object：所有类的超类
+
+1. Object类型的变量：Object是所有类的超类，可以使用Object类型的变量引用任何类型的对象。
+2. equals方法：Object类中的equals方法用于检测一个对象是否等于另一个对象（两个对象引用是否相同）。在子类中定义equals方法是，首先调用超类的equals。
+3. 相等测试与继承：在Java标准库中包含150多个equls方法的实现，包括instanceof检测，调用getclass检测等。
+```text
+//equals方法编写建议：
+1. 将显示参数命名为otherObject，稍后需要将它强制转换成另一个other的变量。
+2. 检测this与otherObject是否为同一对象。
+3. 检测otherObject是否为null，如果为null，则返回false。
+4. 比较this和otherObject的类。如果equels的语义可以在子类中改变，就使用getClass()方法检测，如果所有的子类都有相同的相等性语义，就使用instanceof关键字检测。
+5. 使用==比较基本类型字段，使用Objects.equals()方法比较对象字段。如果都匹配，则返回true。
+```
+4. hashCode方法：
+```text
+由于hashCode方法定义在Object类中，因此每个对象都有默认的散列码，其值有对象的存储地址得出。
+String类型的散列码是由内容导出的，Stringbuilder构建的对象会根据存储地址得出散列码。
+如果x.equals(y)=true,则x.hashCode与y.hashCode相等。数组散列码有数组元素的散列码组成。
+record(记录)类型会自动提供一个hashCode方法。
+```
+5. toString方法：Object类中定义的toString方法，会打印对象的类名和散列码。
+
+## 泛型数组列表
+
+1. 声明数组列表：使用var声明ArrayList时，不要使用菱形语法。因为菱形处的泛型参数类型会根据变量类型自动推导，var类型无法确定泛型参数类型。当数组内部以及满了，编译器会自动创建一个更大的数组，并拷贝全部数据到新的数组中。
+2. 访问数组列表元素：使用get方法获取数组列表元素。
+3. 类型化与原始数组列表的兼容性：-Xlint=unchecked @SupperressWarning("unchecked")
+
+## 对象包装器与自动装箱
+
+包装器类时不可变的，一旦构造了包装器，就不运行更改包装在其中的值(final)。
+如果想要定义一个整型数组列表，
