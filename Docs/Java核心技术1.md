@@ -628,5 +628,75 @@ record(记录)类型会自动提供一个hashCode方法。
 
 ## 对象包装器与自动装箱
 
+```text
 包装器类时不可变的，一旦构造了包装器，就不运行更改包装在其中的值(final)。
-如果想要定义一个整型数组列表，
+如果想要定义一个整型数组列表，尖括号中的类型参数不允许是基本数据类型。
+当使用自动装箱方式创建一个Integer对象时，当数值在-128 ~127时，会将创建的Integer对象缓存起来，当下次再出现该数值时，直接从缓存中取出对应的Integer对象。
+所有引用类型，当使用==运算符时，比较的是两个引用类型变量是否指向相同的对象，要比较引用类型变量的成员变量值是否相等，要使用equals方法。
+由于包装器引用可以为null，所以自动装箱可能会抛出NullPointerException。
+装箱额拆箱是编译器的工作，而不是虚拟机。
+Java编译器：将Java源文件，也就是.java文件编译成字节码.class文件（二进制字节码文件），java.exe可以简单的看成是Java编译器。
+Java解释器：就是把java虚拟机上运行的.class字节码解释成机器指令，让CPU识别运行。即jdk和jre中bin目录下的java.exe文件。Java解释器用来解释执行Java编译器编译后的.class文件。java.exe可以简单的看成Java的解释器。
+```
+```java
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.Scanner;
+
+class Main {
+    public static void main(String[] args) {
+        //不要使用包装器类构造器创建对象，因为包装器类缓存了对象
+        Integer i = new Integer(10);
+        Integer j = new Integer(10);
+        System.out.println(i == j); // false
+        Integer k = 10;
+        Integer l = 10;
+        System.out.println(k == l); // true
+        Integer m = Integer.valueOf(10);
+        Integer n = Integer.valueOf(10);
+        System.out.println(m == n); // true
+    }
+}
+```
+
+## 参数个数可变的方法
+
+```java
+public class PrintStream {
+    //... 表明这个方法可以接受任意个参数，args其实是一个Object[]
+ public PrintStream printf(String format, Object ... args) {
+        return format(format, args);
+    }
+}
+```
+
+```java
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.Scanner;
+
+class Main {
+    public static void main(String[] args) {
+        //如果一个可变参数的最后一个参数是数组，则可以把它重新定义为有可变参数的方法
+        System.out.printf("Hello World! %s,%s",new Object[]{Integer.valueOf(1),"asdsd"});
+        //Hello World! 1,asdsd
+    }
+}
+```
+
+## 抽象类
+
+扩展一个抽象类时，可以有两种选择：
+一种是在子类中保留抽象类中的部分或所有抽象方法仍未定义，这样就必须将子类也标记为抽象类；
+另一种做法是定义全部方法，这样一来，子类就不再是抽象的。
+抽象类不能实例化，抽象类中的抽象方法不能有方法体。但是如果省略抽象方法，就不能通过超类声明的变量名调用抽象方法了，因为编译器只允许调用在类中声明的方法。
+
+## 枚举类
+
