@@ -744,3 +744,9 @@ Class类中的getDeclaredFields、getDeclaredMethod、getDeclaredConstructors返
 6. 使用多态，而不要使用类型信息。
 7. 不要滥用反射：反射机制使人们可以在运行时查看字段和方法，从而编出极具通用性的代码，更适合系统编程使用不适合应用程序编程。
 ```
+
+# 接口、Lambda表达式和内部类
+
+## 接口
+
+1. 实现接口：implements
