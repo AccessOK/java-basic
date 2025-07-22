@@ -749,4 +749,32 @@ Class类中的getDeclaredFields、getDeclaredMethod、getDeclaredConstructors返
 
 ## 接口
 
-1. 实现接口：implements
+1. 实现接口：implements。Arrays.sort()方法只能排序实现了Comparable接口的类。
+2. 接口的属性：接口变量必须引用实现这个接口的类。可以使用instanceof运算符判断对象是否实现了这个接口。接口中的方法自动为public，字段默认为public static final(java8可以在接口中定义静态字段)。
+3. 接口与抽象类： 
+```test
+抽象类（Abstract Class）和接口（Interface）都是用来实现抽象化的工具，但它们在使用和设计上有着明显的不同。
+抽象类:
+    使用abstract关键字定义的，可以包含抽象方法（没有方法体的方法）和非抽象方法（有方法体的方法）。
+    抽象类不能被实例化，意味着你不能创建一个抽象类的对象。
+    它主要用于被其他类继承。抽象类中的抽象方法必须在子类中被实现，除非子类也是抽象类。
+    此外，抽象类可以包含成员变量、构造方法、代码块（包括静态代码块）以及内部类。
+接口:
+    使用interface关键字定义。
+    接口中的所有方法默认都是public abstract的，而成员变量默认是public static final的。
+    接口不包含构造方法，因此不能被实例化。
+    接口主要用于被其他类实现（implement），一个类可以实现多个接口。
+```
+4. 静态和私有方法：Java8中，接口可以定义静态方法，，静态方法不能被继承，只能通过接口名调用。
+5. 默认方法：使用default标记，默认方法允许接口方法有方法体，不用实现类实现。
+6. 默认方法冲突：
+```text
+两个接口定义同名同参的默认方法，实现类必须覆盖该方法，可以在实现类中选择一个默认方法（InterfaceNace.super.fucv()）
+如果至少一个接口提供了默认方法，编译器就会报冲突，那么实现类必须覆盖该方法。
+类优先：如果抽象类和接口定义了同名同参的抽象方法，那么抽象类方法优先。
+```
+7. 接口与回调：定时器调用对象的方法。这个对象必须实现ActionListener接口。
+8. Comparable接口：实现Comparable接口的对象必须实现compareTo方法，compareTo方法返回一个整数，表示当前对象与参数对象之间的大小关系。
+9. 对象克隆：Cloneable接口,标记接口不含有任何方法，它唯一的作用是允许在类型查询中使用（instanceof）。clone()方法是Object提供的protected方法。 深拷贝和浅拷贝。
+
+## Lambda表达式
