@@ -778,3 +778,18 @@ Class类中的getDeclaredFields、getDeclaredMethod、getDeclaredConstructors返
 9. 对象克隆：Cloneable接口,标记接口不含有任何方法，它唯一的作用是允许在类型查询中使用（instanceof）。clone()方法是Object提供的protected方法。 深拷贝和浅拷贝。
 
 ## Lambda表达式
+
+1. 为什么引入Lambda表达式：可传递的代码
+2. Lambda表达式语法：（） -> { return  ;} //lambda表达式中可以显示的return 返回。
+3. 函数式接口：对于只有一个抽象函数的接口，需要这种接口对象时，可以提供一个表达式，这种接口称为函数式接口。
+4. 方法引用： 
+```text
+方法引用是Lambda表达式的一种简化形式，用于直接引用已有的方法或构造函数。
+方法引用的语法是使用双冒号::操作符。
+他指示编译器生成一个函数式接口的实例，覆盖这个接口的抽象方法来调用给定的方法。
+1. 对象::实例方法名
+2. 类名::静态方法名
+3. 类名::实例方法名
+4. 类名::new - 构造器引用
+```
+5. 构造器引用：ClassName::new，创建一个ClassName的实例。
