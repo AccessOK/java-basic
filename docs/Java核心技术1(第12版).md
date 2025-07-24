@@ -782,4 +782,39 @@ Class类中的getDeclaredFields、getDeclaredMethod、getDeclaredConstructors返
 1. 为什么引入Lambda表达式：可传递的代码
 2. Lambda表达式语法：（） -> { return  ;} //lambda表达式中可以显示的return 返回。
 3. 函数式接口：对于只有一个抽象函数的接口，需要这种接口对象时，可以提供一个表达式，这种接口称为函数式接口。
-4. 方法引用：System.out::println是一个方法引用，他指示编译器生成一个函数式接口的实例，覆盖这个接口的抽象方法来调用给定的方法。
+4. 方法引用： 
+```text
+方法引用是Lambda表达式的一种简化形式，用于直接引用已有的方法或构造函数。
+方法引用的语法是使用双冒号::操作符。
+他指示编译器生成一个函数式接口的实例，覆盖这个接口的抽象方法来调用给定的方法。
+1. 对象::实例方法名
+2. 类名::静态方法名
+3. 类名::实例方法名
+4. 类名::new - 构造器引用
+```
+5. 构造器引用：ClassName::new，创建一个ClassName的实例。
+6. 变量作用域：Lambda表达式的变量作用域和普通方法一样，不能引用外部方法中的局部变量。在lambda表达式中使用this，是指创建这个lambda表达式的方法的this参数。
+7. 处理lambda表达式：lambda表达式的重点是延迟执行。
+8. 再谈Comparator：
+```text
+Arrays.sort(peole, (Person a, Person b) -> a.getBirthday().compareTo(b.getBirthday()));
+//调用静态comparing方法比较方法引用
+Arrays.sort(people, Comparator.comparing(Person::getBirthday));
+//调用实例方法引用
+Arrays.sort(people, Comparator.comparing(Person::getBirthday).thenComparing(Person::getName));
+Arrays.sort(people, Comparator.comparing(Person::getBirthday,(a, b)->Integer.compare(a.length(), b.length()))));
+```
+
+## 内部类
+
+1. 使用内部类访问对象状态：
+```text
+内部类定义在另一个类中的类，可以对同一个包中的其他类隐藏。
+内部类方法可以访问定义这些方法的作用域中的数据，包括私有的数据。
+内部类的对象总有一个隐式引用，指向创建他的外部类对象(OuterClass.this)。外部类的引用在构造器中国设置，编译器会修改所有的内部类构造器，添加一个对应外部类引用的参数
+```
+2. 内部类的特殊语法规则：OuterClass.InnerClass
+3. 内部类是否有用、必要和安全：内部类将转换为常规的类文件，用$符号分隔内部类和外部类。TalkingClock$TimePrinter.class
+4. 局部内部类：声明局部类时不能有访问说明符(public\private\protected),局部类的作用域总是限定在声明这个局部类的块中。
+5. 由外部方法访问变量：不仅可以访问外部类字段，还可以访问局部变量，但是这些局部变量必须是最终事实变量。
+6. 匿名内部类：只创建这个类的一个对象 new SuperType(ConstructorParameters) { inner class method and data  };构造器名称需与类名相同，由于匿名内部类没有类名，所以匿名内部类没有构造函数。虽然没有构造函数，但是可以添加初始化块。

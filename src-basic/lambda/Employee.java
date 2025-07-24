@@ -1,4 +1,4 @@
-package interfaces;
+package lambda;
 
 public class Employee implements Comparable<Employee>{
     private String name;
