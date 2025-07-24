@@ -817,4 +817,23 @@ Arrays.sort(people, Comparator.comparing(Person::getBirthday,(a, b)->Integer.com
 3. 内部类是否有用、必要和安全：内部类将转换为常规的类文件，用$符号分隔内部类和外部类。TalkingClock$TimePrinter.class
 4. 局部内部类：声明局部类时不能有访问说明符(public\private\protected),局部类的作用域总是限定在声明这个局部类的块中。
 5. 由外部方法访问变量：不仅可以访问外部类字段，还可以访问局部变量，但是这些局部变量必须是最终事实变量。
-6. 匿名内部类：只创建这个类的一个对象 new SuperType(ConstructorParameters) { inner class method and data  };构造器名称需与类名相同，由于匿名内部类没有类名，所以匿名内部类没有构造函数。虽然没有构造函数，但是可以添加初始化块。
+6. 匿名内部类：
+```text
+只创建这个类的一个对象 new SuperType(ConstructorParameters) { inner class method and data  };
+构造器名称需与类名相同，由于匿名内部类没有类名，所以匿名内部类没有构造函数。虽然没有构造函数，但是可以添加初始化块。
+```
+7. 静态内部类：如果不需要内部类访问外部类对象，那么可以将内部类声明为静态内部类。
+
+## 服务加载器
+
+服务加载器：ServiceLoader.load(Class<S> service)
+在ServiceLoader.load的时候，根据传入的接口类，遍历META-INF/services目录下的以该类命名的文件中的所有类，并实例化返回。
+
+## 代理
+
+1. 如何使用代理：代理类会在运行时动态生成，代理类继承了被代理类，并实现相同的接口。调用处理器实现了InvocationHandler接口，代理类会调用处理器的invoke方法。
+2. 创建代理类：Proxy.newProxyInstance(ClassLoader, Class[], InvocationHandler)
+3. 代理类的特性：一个特定的类加载器和一组接口只能有一个代理类。代理类总是pulic final。
+
+# 异常、断言和日志
+
