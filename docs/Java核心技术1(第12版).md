@@ -837,3 +837,64 @@ Arrays.sort(people, Comparator.comparing(Person::getBirthday,(a, b)->Integer.com
 
 # 异常、断言和日志
 
+## 处理错误
+1. 异常分类：所有的异常都是由Throwable继承而来，Throwable有2个子类：Error和Exception。Error表示运行时错误，Exception表示运行时异常。
+2. 声明检查型异常：throws 不需要声明Java的内部错误。一个方法必须声明所有可能抛出的检查型异常。运行时异常不需要声明。
+3. 如何抛出异常：throw new Exception();
+4. 创建异常类：创建异常类继承Exception。
+
+## 捕获异常
+
+1. 捕获异常概述：try{}catch{}finally{}
+2. 捕获多个异常：try{}catch(Exception1 | Exception2 e){}catch(Exception3 e){}
+3. 再次抛出异常与异常链：希望改变异常的类型时可以这么做，在catch块中thorw new Exception2(e);
+4. finally: finally块中的代码会执行，即使try块中的代码抛出了异常。抛出异常如果没有被捕获而是通过throw或者throws再次抛出，将只执行finally块不执行fianlly之后的代码。
+5. try-with-resources: try(Resource resource = ){work with resource}try语句结束或抛出异常时会自动调用res.close()关闭资源。
+6. 分析栈轨迹元素：栈轨迹元素格式为：类名.方法名(文件名:行号)，是分析程序执行过程中国某个特定点上所有挂起的方法调用的一个列表。
+
+## 使用异常的技巧
+
+异常处理不能代替简单的测试、不过分的细化异常、合理利用异常的层次结构、不要压制异常
+
+## 使用断言
+
+1. 断言的概念：assert condition：expression 断言机制允许你在测试期间在代码中插入一些检查，而在生产代码中自动删除这些检查。
+2. 启用和禁用断言：-ea/-enableAssertions -da/-disableAssertions。启用和禁止断言是类加载器的功能，不用重新编译代码。
+3. 使用断言完成参数检查：断言失败是致命的，不可恢复的错误，断言失败会抛出一个AssertionError。只应该用于在测试阶段确定程序内部错误的位置。
+4. 使用断言提供假设文档：
+
+## 日志
+
+1. 基本日志：Logger.log(Level, String)，全局日志记录器。
+2. 高级日志：Logger.getLogger(String),子日志记录器会记录父日志记录器的某些属性。
+3. 修改日志管理器配置：日志管理器在虚拟机启动时初始化，main函数执行前。
+4. 本地化：请求一个日志记录器，可以指定一个资源包，在本地化消息中添加占位符{0}。
+5. 处理器：日志记录器将记录发送到ConsoleHandler，他会将记录输出到System.err流。FileHandler将日志记录收集到文件，SocketHandler将记录发送到主机端。
+6. 过滤器：根据日志级别进行过滤。
+7. 格式化器：通过拓展Formatter类并重写format
+8. 日志技巧：日志记录器命名为主包同名
+
+## 调试技巧
+
+JUnit 
+日志代理：截取方法调用并记录日志
+输出栈轨迹：1. 创建一个类继承Throwable，并添加一个静态方法，返回一个Throwable对象。
+System.err
+启动java虚拟机时，使用-verbose
+-Xlint
+jdk监控和管理、Jconsole
+
+# 泛型程序设计
+
+## 为什么要使用泛型程序设计
+
+1. 类型参数的好处：代码可以对多种不同类型的对象重用。类型参数可以指示元素的类型。
+2. 谁想成为泛型程序员：通配符类型。
+
+## 定义简单泛型类
+
+引入类型变量T、U，可以使用<>括起来，放在类名后面。泛型类可以有任意数量的类型参数。类型变量使用大写字母表示。
+
+## 泛型方法
+
+定义带有参数类型的方法，函数的返回类型为泛型。
