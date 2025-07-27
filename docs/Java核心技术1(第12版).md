@@ -826,7 +826,7 @@ Arrays.sort(people, Comparator.comparing(Person::getBirthday,(a, b)->Integer.com
 
 ## 服务加载器
 
-服务加载器：ServiceLoader.load(Class<S> service)
+服务加载器：ServiceLoader.load(Class\<S> service)
 在ServiceLoader.load的时候，根据传入的接口类，遍历META-INF/services目录下的以该类命名的文件中的所有类，并实例化返回。
 
 ## 代理
@@ -897,4 +897,140 @@ jdk监控和管理、Jconsole
 
 ## 泛型方法
 
-定义带有参数类型的方法，函数的返回类型为泛型。
+定义带有参数类型的方法，函数的返回类型为泛型。调用的时候可以吧具体类型包围在尖括号中。
+
+## 类型变量的限定
+
+限定类型变量只实现了某个接口，<T extends Interface1 & Interface2>
+
+## 泛型代码和虚拟机
+
+1. 类型擦除：虚拟机没有泛型对象，所有对象都属于普通类。编译器会擦除类型变量，并替换为其限定类型或Object，如果限定多个类，则使用在前面的限定类型。
+2. 转换泛型表达式：编写一个泛型方法调用时，如果擦除了返回类型，编译器会插入强制类型转换。
+3. 转换泛型方法：
+```text
+继承或实现限定类型时，。父类是泛型类，且在该类中存在泛型方法，子类继承父类并实现泛型方法。
+如果在子类实现中不包含父类经过类型擦除后生成的原始类型方法，则编译器会自动将该原始类型方法添加到子类中。这个被添加的子类就桥接方法。
+桥方法：由java编译器生成，实现泛型接口的方法。覆盖超类方法并升级返回类型。
+所有类型在编译后都会被擦除为Object。为了确保泛型方法在运行时能正确调用，编译器会生成一个桥方法来处理类型转换和方法调用。
+```
+4. 调用遗留代码：@SuppressWarnings("unchecked")取消警告。
+
+## 限制与局限性
+
+1. 不能使用基本类型实例化类型参数：类型擦除时无限定类型的参数会被擦除为Object，Object不能存储基本数据类型。
+2. 运行时类型查询只适用于原始类型： 
+```text
+虚拟机中的对象总是有一个特定的非泛型类型，所有的类型查询只生成原始类型。
+instanceof和getclass总是返回原始类型。
+Pair<String> p = ...
+Pair<Empolyee> e= ...
+if(p.getClass()==e.getCLass()) {} //they are equal
+```
+3. 不能创建参数化类型的数组：
+```text
+java中子类数组可以赋值给父类数组变量。参数化类型的数组擦除后转换成限定类数组或Object[]。
+var table = new Pair<String>()[10];//编译错误,假设可以，Pair编译时擦除为Object[]
+Object[] objects = table; //擦除时，对象数组被擦除为Object[]，objects类型不会报错，但是数组会记住他的元素类型Pair，运行时会检查数组存储类型。
+objects[0] = "Hello"; //ArrayStoreException,数组只能存储创建时元素类型。
+//不过对于泛型类型，擦除会使这种机制无效
+objects[0] = new Pair<String>(); //不会报错,尽管能通过数组存储检查，但是仍会导致类型错误。
+```
+4. Varargs警告：
+```text
+向参数个数可变的方法传递一个泛型类型的实例：数组元素的数据类型在编译和运行时都是确定的，而泛型的数据类型只有在运行时才能确定。
+因此当把一个泛型存储到数组中时，编译器在编译阶段无法检查数据类型是否匹配，所以会给出警告。
+public static <T> void addAll(Collection<T> coll,T... elements) { //实际上elements的类型是Object[]
+    for(T e: elements) {
+        coll.add(e);
+    }
+}
+Collection<Pair<String>> c = new ArrayList<Pair<String>>()[];//会被警告，使用@SuppressWarnings("unchecked")取消警告。
+Pair<String> p = new Pair<String>();
+addAll(c, p);
+//或者使用@SafarVarargs直接注解addAll方法取消警告，对于任何只需要读取参数数组元素的方法都可使用，其只能用于声明static、final或private的构造器和方法。也编译时使用-Xlint:unchecked。
+```
+5. 不能实例化类型变量：不能在new T(...)的表达式中使用类型变量。java8让调用者传构造器表达式，用方法接受一个函数式接口(Supplier<T>)。
+```text
+//让调用者提供构造器表达式
+Pair<String> p1 = Pair.newInstance(() -> new String());//函数式接口
+Pair<String> p2 = Pair.newInstance(String::new);
+class Pair<T> {
+    public static <T> T newInstance(Supplier<T> constructor) { //Supplier<T> 函数式接口
+        return new Pair<>(constructor.get(), constructor.get()); //get()方法不接受任何参数，但返回一个泛型类型T的实实例。
+    }
+}
+//利用反射
+public static <T> T newInstance(Class<T> cls) {
+    try{
+        return new Pair<>(cls.getConstructor().newInstance(), cls.getConstructor().newInstance());//getConstructor()获取指定参数类型的公共构造函数
+    }catch(Exception e){
+        return null;
+    }
+}
+```
+6. 不能构造泛型数组：
+```text
+数组本身也带有类型，用来监控虚拟机中的数组存储，这个类型会被擦除。
+类型擦除会导致总是构造限定类型数组，在强制转换，在强制转换时会抛出ClassCastException。
+若提供数组构造器表达式
+public static <T extends Comparable> T[] newArray(IntFunction<T[]> constr, T... a){
+    T[] result = constr.apply(length);
+}
+public static <T extends Comparable> T[] newArray(Class<T> clazz, int length){
+    var result = (T[]) Array.newInstance(clazz, length);
+}
+```
+7. 泛型类的静态上下文中类型变量无效：静态上下文中，无需创建类实例，虚拟机不知道该返回什么类型。
+8. 不能抛出或捕获泛型类的实例：既不能抛出也不能捕获泛型类的对象。泛型类不能拓展Throwable。catch中不能使用类型变量。但是可以在异常规范中使用类型变量。
+```text
+public static <T extends Throwable> void doWork(T t) throws T{
+    try{
+        do work
+    }
+    catch(T t){
+        t.initCase(reason);
+        throw t;
+    }
+}
+```
+9. 可以取消对检查型异常的检查：在java中必须为所有检查型异常提供一个处理器，不过可以利用泛型取消这个机制。
+```text
+@SuppressWarnings("unchecked")
+static <T extends Throwable> void throwAs(Throwable t) throws T{//如果该方法在一个接口中，如果调用接口的throwsAs(e)方法，编译器会认为e是一个非检查型异常。
+    throw (T)t;
+}
+```
+10. 注意擦除后的冲突：倘若两个接口类型是同一接口的不同参数化,一个类或类型变量就不能同时作为这两个接口类型的子类，因为擦除后的类型相同，合成桥方法会产生冲突。
+
+## 泛型类型的继承规则
+
+泛型中无论R和T有什么关系，Pair<R>和Pair<T>都没有任何关系。总是可以将参数化类型转换为一个原始类型。泛型类可以实现和拓展其他泛型类
+```text
+var managerBuddies=new Pair<String>(bob,sue);
+Pair buddies=managerBuddies; // OK  参数化类型转换为一个原始类型
+buddies.setFirst(fred); // 警告：转换成原始类型后，无法保证类型安全
+```
+
+## 通配符类型
+
+1. 通配符概念：通配符类型，如?，表示任意类型。? extends 表示类型参数的上限，限制泛型类型参数为某个类的子类。声明泛型类型时不指定具体的类型参数。不能向通配符的泛型对象中添加任何具体类型的元素，但可以读取泛型对象中的元素。
+2. 通配符的超类型限定：? super 表示类型参数的下限，限制泛型类型参数为某个类的超类，允许添加任意类型参数的元素。
+3. 无限定通配符：？，判断null比较方便。
+4. 通配符捕获：不能编写使用?作为一种类型的代码。可以使用泛型T t=p.getFirst()作为类型。
+
+## 反射和泛型
+
+1. 反射Class类
+```text
+
+```
+
+
+
+
+
+
+
+
+
