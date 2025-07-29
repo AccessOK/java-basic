@@ -826,7 +826,7 @@ Arrays.sort(people, Comparator.comparing(Person::getBirthday,(a, b)->Integer.com
 
 ## 服务加载器
 
-服务加载器：ServiceLoader.load(Class\<S> service)
+服务加载器：ServiceLoader.load(Class<S> service)
 在ServiceLoader.load的时候，根据传入的接口类，遍历META-INF/services目录下的以该类命名的文件中的所有类，并实例化返回。
 
 ## 代理
@@ -894,18 +894,72 @@ jdk监控和管理、Jconsole
 ## 定义简单泛型类
 
 引入类型变量T、U，可以使用<>括起来，放在类名后面。泛型类可以有任意数量的类型参数。类型变量使用大写字母表示。
+```text
+泛型接口在接口被继承或被实现时确定类型参数,接口中的属性是静态的，不能使用参数类型声明,默认方法可以使用类型参数。
+泛型类，在创建类的对象的时候确定类型参数的具体类型；
+泛型方法，在调用方法的时候再确定类型参数的具体类型。
+```
 
 ## 泛型方法
 
-定义带有参数类型的方法，函数的返回类型为泛型。调用的时候可以吧具体类型包围在尖括号中。
+当在一个方法签名中的返回值前面声明了一个<T>时，该方法就被声明为一个泛型方法。<T>表明该方法声明了一个类型参数T，并且这个类型参数T只能在该方法中使用。
 
+```text
+（1） 只有在方法签名中声明了< T >的方法才是泛型方法，仅使用了泛型类定义的类型参数的方法并不是泛型方法。
+public class Test<U> {
+	// 该方法只是使用了泛型类定义的类型参数，不是泛型方法
+	public void testMethod(U u){
+		System.out.println(u);
+	}	
+	// <T> 真正声明了下面的方法是一个泛型方法
+	public <T> T testMethod1(T t){
+		return t;
+	}
+}
+（2） 泛型方法中可以同时声明多个类型参数。
+public class TestMethod<U> {
+	public <T, S> T testMethod(T t, S s) {
+		return null;
+	}
+}
+（3）泛型方法中也可以使用泛型类中定义的泛型参数。当泛型方法的形参列表中有多个类型参数时，在不指定类型参数的情况下，方法中声明的的类型参数为泛型方法中的几种类型参数的共同父类的最小级，直到 Object。
+public class TestMethod<U> {
+	public <T> U testMethod(T t, U u) {
+		return u;
+	}
+}
+（4）特别注意的是：泛型类中定义的类型参数和泛型方法中定义的类型参数是相互独立的，它们一点关系都没有。
+public class Test<T> {
+	public void testMethod(T t) {
+		System.out.println(t);
+	}
+	//上面代码中，Test< T > 是泛型类，testMethod() 是泛型类中的普通方法，其使用的类型参数是与泛型类中定义的类型参数。
+	
+	public <T> T testMethod1(T t) {
+		return t;
+	}
+	// testMethod1() 是一个泛型方法，他使用的类型参数是与方法签名中声明的类型参数。
+	// < T >表明该方法声明了一个类型参数 T，并且这个类型参数 T 只能在该方法中使用。
+    //虽然泛型类中定义的类型参数标识和泛型方法中定义的类型参数标识都为< T >，但它们彼此之间是相互独立的。
+    //也就是说，泛型方法始终以自己声明的类型参数为准。
+	// 泛型类定义的类型参数 T 不能在静态方法中使用
+    
+    public static <E> E show(E one) {     
+        return null;    
+    } 
+	//前面在泛型类的定义中提到，在静态成员中不能使用泛型类定义的类型参数，但我们可以将静态成员方法定义为一个泛型方法。
+	//泛型类定义的类型参数 T 不能在静态方法中使用
+	//但可以将静态方法声明为泛型方法，方法中便可以使用其声明的类型参数了
+}
+
+```
 ## 类型变量的限定
 
 限定类型变量只实现了某个接口，<T extends Interface1 & Interface2>
 
 ## 泛型代码和虚拟机
 
-1. 类型擦除：虚拟机没有泛型对象，所有对象都属于普通类。编译器会擦除类型变量，并替换为其限定类型或Object，如果限定多个类，则使用在前面的限定类型。
+1. 类型擦除：Java 编译器是先检查代码中传入 < T > 的数据类型，并记录下来，然后再对代码进行编译，编译的同时进行类型擦除；如果需要对被擦除了泛型信息的对象进行操作，编译器会自动将对象进行类型转换。编译器会擦除类型变量，并替换为其限定类型或Object，如果限定多个类，则使用在前面的限定类型。
 2. 转换泛型表达式：编写一个泛型方法调用时，如果擦除了返回类型，编译器会插入强制类型转换。
 3. 转换泛型方法：
 ```text
@@ -926,6 +980,13 @@ instanceof和getclass总是返回原始类型。
 Pair<String> p = ...
 Pair<Empolyee> e= ...
 if(p.getClass()==e.getCLass()) {} //they are equal
+
+public void test() {
+	Generic<String> generic = new Generic<>();// 传入 String 类型
+	// <> 中什么都不传入，等价于 Generic<Object> generic = new Generic<>();
+	Generic generic = new Generic();
+}
+
 ```
 3. 不能创建参数化类型的数组：
 ```text
@@ -981,7 +1042,20 @@ public static <T extends Comparable> T[] newArray(Class<T> clazz, int length){
     var result = (T[]) Array.newInstance(clazz, length);
 }
 ```
-7. 泛型类的静态上下文中类型变量无效：静态上下文中，无需创建类实例，虚拟机不知道该返回什么类型。
+7. 泛型类的静态上下文中类型变量无效：
+```text
+泛型类中的静态方法和静态变量不可以使用泛型类所声明的类型参数。
+泛型类中的类型参数是在创建泛型类实例时（new ArraysList<String>();）确定的，而静态变量和静态方法在类加载是初始化，直接使用类名调用。
+在泛型类的类型参数还没确定时，静态成员有可能会被调用。
+静态泛型方法中可以使用自身的方法签名中新定义的类型参数（即泛型方法，后面会说到），而不能使用泛型类中定义的类型参数。
+public class Test2<T> {   
+	// 泛型类定义的类型参数 T 不能在静态方法中使用  
+    public static <E> E show(E one){ // 这是正确的，因为 E 是在静态方法签名中新定义的类型参数    
+        return null;    
+    }    
+}  
+
+```
 8. 不能抛出或捕获泛型类的实例：既不能抛出也不能捕获泛型类的对象。泛型类不能拓展Throwable。catch中不能使用类型变量。但是可以在异常规范中使用类型变量。
 ```text
 public static <T extends Throwable> void doWork(T t) throws T{
@@ -1021,16 +1095,12 @@ buddies.setFirst(fred); // 警告：转换成原始类型后，无法保证类�
 
 ## 反射和泛型
 
-1. 反射Class类
+1. 泛型Class类
+2. 使用Class<T>参数进行类型匹配
+3. 虚拟机中的泛型类型信息：
 ```text
-
+Class类是泛型类
 ```
-
-
-
-
-
-
 
 
 
