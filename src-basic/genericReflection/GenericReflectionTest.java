@@ -27,7 +27,7 @@ public class GenericReflectionTest {
     }
     public static void printClass(Class<?> cl){
         System.out.print(cl); //class pair.Pair1
-        printTypes(cl.getTypeParameters(),"<",",",">",true);
+        printTypes(cl.getTypeParameters(),"<",",",">",true); //<
         Type sc=cl.getGenericSuperclass(); //获取父类
         if(sc!=null){
             System.out.print(" extends ");
@@ -57,16 +57,16 @@ public class GenericReflectionTest {
         if(types.length>0)System.out.print(suf);
     }
     public static void printType(Type type,boolean isDefinition){
-        if(type instanceof Class t){
+        if(type instanceof Class t){ //运行时类的类型信息
             System.out.print(t.getName());
-        }else if(type instanceof TypeVariable t){
+        }else if(type instanceof TypeVariable t){//泛型类型的占位符
             System.out.print(t.getName());
             if(isDefinition)printTypes(t.getBounds()," extends ","&","",false);
-        } else if (type instanceof WildcardType t) {
+        } else if (type instanceof WildcardType t) {//通配符类型
             System.out.print("?");
             printTypes(t.getUpperBounds()," extends "," & ","",false);
             printTypes(t.getUpperBounds()," super "," & ","",false);
-        } else if (type instanceof ParameterizedType t) {
+        } else if (type instanceof ParameterizedType t) {//参数化类型，获取泛型的实际类型参数
             Type owner =t.getOwnerType();
             if (owner!=null){
                 printType(owner,false);
@@ -74,7 +74,7 @@ public class GenericReflectionTest {
             }
             printType(t.getRawType(),false);
             printTypes(t.getActualTypeArguments(),"<",",",">",false);
-        } else if (type instanceof GenericArrayType t) {
+        } else if (type instanceof GenericArrayType t) {// 泛型数组
             System.out.print("");
             printType(t.getGenericComponentType(),isDefinition);
             System.out.print("[]");

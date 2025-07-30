@@ -826,7 +826,7 @@ Arrays.sort(people, Comparator.comparing(Person::getBirthday,(a, b)->Integer.com
 
 ## 服务加载器
 
-服务加载器：ServiceLoader.load(Class<S> service)
+服务加载器：ServiceLoader.load(Class\<S> service)
 在ServiceLoader.load的时候，根据传入的接口类，遍历META-INF/services目录下的以该类命名的文件中的所有类，并实例化返回。
 
 ## 代理
@@ -1097,10 +1097,48 @@ buddies.setFirst(fred); // 警告：转换成原始类型后，无法保证类�
 
 1. 泛型Class类
 2. 使用Class<T>参数进行类型匹配
-3. 虚拟机中的泛型类型信息：
+3. 虚拟机中的泛型类型信息
+4. 类型字面量
+
+# 集合
+
+## Java集合框架
+
+1. 集合接口与实现分离：
 ```text
-Class类是泛型类
+队列接口：可以在队尾添加元素，也可以在队首删除元素，也可以在队列中查找元素个数，先进先出。
+队列通常由两种实现：循环数组和链表。
 ```
+2. Collection接口：
+3. 迭代器：Iterator 接口,
+```test
+for each 循环可以处理任何实现Iterator接口的对象。
+调用forEachRemaining方法并提供lambda表达式,iterator.forEachRemaining(element->System.out.println(element));
+next()和remove()方法存在依赖关系，it.next();it.remove();
+```
+4. 泛型实用方法：Conllection接口，Set不允许添加重复的元素
 
+## 具体集合
 
+- AbstractCollection
+    - AbstractList
+      - ArrayList
+      - AbstractSequentialList
+        - LinkedList
+    - AbstractSet
+      - HashSet
+        - LinkedHashSet
+      - TreeSet
+      - EnumSet
+    - AbstractQueue
+      - PrioityQueue
+      - ArrayQueue
+- AstractMap
+  - HashMap
+    - LinkedHashMap
+  - TreeMap
+  - EnumMap
+  - WeakHashMap
+  - IdentityHashMap
 
+1. 链表：java程序设计语言中，所有链表实际上都有双向链接。
