@@ -826,7 +826,7 @@ Arrays.sort(people, Comparator.comparing(Person::getBirthday,(a, b)->Integer.com
 
 ## 服务加载器
 
-服务加载器：ServiceLoader.load(Class<S> service)
+服务加载器：ServiceLoader.load(Class\<S> service)
 在ServiceLoader.load的时候，根据传入的接口类，遍历META-INF/services目录下的以该类命名的文件中的所有类，并实例化返回。
 
 ## 代理
@@ -1097,10 +1097,66 @@ buddies.setFirst(fred); // 警告：转换成原始类型后，无法保证类�
 
 1. 泛型Class类
 2. 使用Class<T>参数进行类型匹配
-3. 虚拟机中的泛型类型信息：
+3. 虚拟机中的泛型类型信息
+4. 类型字面量
+
+# 集合
+
+## Java集合框架
+
+1. 集合接口与实现分离：
 ```text
-Class类是泛型类
+队列接口：可以在队尾添加元素，也可以在队首删除元素，也可以在队列中查找元素个数，先进先出。
+队列通常由两种实现：循环数组和链表。
 ```
+2. Collection接口：
+3. 迭代器：Iterator 接口,
+```test
+for each 循环可以处理任何实现Iterator接口的对象。
+调用forEachRemaining方法并提供lambda表达式,iterator.forEachRemaining(element->System.out.println(element));
+next()和remove()方法存在依赖关系，it.next();it.remove();
+```
+4. 泛型实用方法：Conllection接口，Set不允许添加重复的元素
 
+## 集合框架中的接口
 
+- Iterable
+  - Collection
+    -  List
+    -  Set
+      -  SortedSet
+        - NavigableSet：
+    -  Queue：队列
+      - Deque：双向队列
+- Map 
+  - SortedMap
+    - NavigableMap
+- Iterator
+  - ListIterator：支持双向遍历
+- RandomAccess：不包含任何方法，表示集合中的元素可以以随机访问的方式访问。
+    
 
+## 具体集合
+
+- AbstractCollection
+    - AbstractList
+      - ArrayList：动态增长或缩减的列表
+      - AbstractSequentialList
+        - LinkedList：链表，在任意位置添加或删除元素。
+    - AbstractSet
+      - HashSet：无序集合，不允许重复元素
+        - LinkedHashSet：插入顺序的集合
+      - TreeSet：有序集合，不允许重复元素
+      - EnumSet：枚举集合
+    - AbstractQueue
+      - PrioityQueue：允许高效删除最小元素的队列
+      - ArrayDueue: 循环数组的双端队列
+- AstractMap
+  - HashMap：键值对存储
+    - LinkedHashMap：可以记住键值添加顺序
+  - TreeMap：键有序的映射
+  - EnumMap：键属于枚举的映射
+  - WeakHashMap：映射中的值会被垃圾回收
+  - IdentityHashMap：键和值都使用==比较
+
+1. 链表：java程序设计语言中，所有链表实际上都有双向链接。
