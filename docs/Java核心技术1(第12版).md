@@ -649,8 +649,8 @@ import java.util.Scanner;
 class Main {
     public static void main(String[] args) {
         //不要使用包装器类构造器创建对象，因为包装器类缓存了对象
-        Integer i = new Integer(10);
-        Integer j = new Integer(10);
+        Integer i = 10;
+        Integer j = 10;
         System.out.println(i == j); // false
         Integer k = 10;
         Integer l = 10;
