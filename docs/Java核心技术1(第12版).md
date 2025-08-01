@@ -1173,5 +1173,38 @@ next()和remove()方法存在依赖关系，it.next();it.remove();
 3. 映射试图：实现了Collectio接口或某个子接口的对象。映射视图的修改会反映到映射中。
 4. 弱散列映射：WeakHashMap,将键的唯一引用来自散列表条目时，该键值对会被垃圾回收。
 5. 链接散列集与映射：LinkedHashMap，会记录插入元素的顺序，链接散列表可以使用访问顺序或插入顺序，来迭代处理映射条目。每次调用put或get,收到影响的元素将移动到链表末尾。
-6. 枚举集与映射：EnumSet
-7. 
+6. 枚举集与映射：EnumSet,其元素属于枚举类型，没有构造器，使用静态工厂方法创建。
+7. 标识散列映射：IdentityHashMap,键和值都使用==比较，不同键对象即使内容相同，也视为不同的对象。
+
+## 副本与试图
+
+1. 小集合：
+```text
+java9中引入了一些静态方法，可以生成简单直接的拥有给定元素的集或列表。
+of()生成一个不可修改的集合。如果需要修改集合，请将该集合传到构造器中。
+List.of("1","asd","3")
+Set.of(1,2,3)
+Map.of("asdqwe",1,"eqwe":1,"weqwe":2,"qweqwedf":2)
+Map.ofEntries(Map.entry("asdqwe",1),Map.entry("eqwe",1),Map.entry("weqwe",2),Map.entry("qweqwedf",2))
+```
+2. 不可修改的副本和视图：如果多个线程访问同一个集合，必须确保集合不会被意外的破坏，对于没有实现线程安全的集合类，可以用集合的副本或视图。
+```text
+不可修改的副本：例如copyof()都会创建一个不可修改的副本，如果修改原集合，副本不受影响。如果这个集合刚好本身就是不可修改的，copyof()则直接返回原集合。
+不可修改的视图：Collections类有一些方法(unmodifiableXXX())可以生成集合的不可修改的视图，这些试图对现有集合增加了运行时检查，如果检测到试图修改不可修改的集合，会抛出UnsupportedOperationException。
+             如果集合改变，视图会自动更新。视图集合的equals()方法不会调用底层集合的equals()方法，仅仅检查两个对象是否是在同一地址的完全相同的对象。
+```
+3. 子范围：创建子范围集合，子范围集合是原集合的子集。subList(a,b),第一个索引包含在内，不包含第二个索引。可以对子范围应用任何操作，并且会自动反映到整个列表。
+4. 检查型视图：对泛型类型可能出现的问题提供调试支持。Collections.checkedList();
+5. 同步视图：Collections的synchronizedMap()可以将任何一个映射转换成有同步访问方法的map。
+6. 关于可选操作的说明：
+
+## 算法
+
+1. 为什么使用泛型算法：泛型算法可以处理任意类型的对象，而不仅仅是基本类型。
+2. 排序和混排：sort(),shuffle()
+3. 二分查找：Collections.binarySearch(list,element), 返回元素在列表中的索引，如果列表中不存在该元素，返回负数。集合必须有序。
+4. 简单算法：Collections.min(),Collections.max()......
+5. 批操作: 成批复制或删除元素。
+6. 集合与数组的转换：List.of(a,b,c);toArray(); Arrays.asList(a,b,c); toArray()返回一个Object[]数组，不能改变他的类型，但是可以向toArray(String[]::new)传递一个数组构造器，创建一个指定类型的数组。
+7. 编写自己的算法：创建一个类，实现Comparator接口，并实现compare()方法。
+8. 遗留的集合：HashTable(),
