@@ -1207,4 +1207,10 @@ Map.ofEntries(Map.entry("asdqwe",1),Map.entry("eqwe",1),Map.entry("weqwe",2),Map
 5. 批操作: 成批复制或删除元素。
 6. 集合与数组的转换：List.of(a,b,c);toArray(); Arrays.asList(a,b,c); toArray()返回一个Object[]数组，不能改变他的类型，但是可以向toArray(String[]::new)传递一个数组构造器，创建一个指定类型的数组。
 7. 编写自己的算法：创建一个类，实现Comparator接口，并实现compare()方法。
-8. 遗留的集合：HashTable(),
+
+## 遗留的集合：
+1. HashTable类
+2. 枚举:Enumeration()
+3. 属性映射：键值都是字符串，可以保存到属性文件中。Properties类可以使用store方法将属性保存到文件中。
+4. 栈：Stack类，继承自Vector类，Vector类是线程安全的，Stack类不是。Stack类提供了push()和pop()方法，用于将元素添加到栈顶，并返回栈顶的元素。
+5. 位集：BitSet类，用于存储位。提供了一个用于读取，设置或重置各个位的接口。
