@@ -1056,7 +1056,9 @@ public class Test2<T> {
 }  
 
 ```
+
 8. 不能抛出或捕获泛型类的实例：既不能抛出也不能捕获泛型类的对象。泛型类不能拓展Throwable。catch中不能使用类型变量。但是可以在异常规范中使用类型变量。
+
 ```text
 public static <T extends Throwable> void doWork(T t) throws T{
     try{
@@ -1068,18 +1070,22 @@ public static <T extends Throwable> void doWork(T t) throws T{
     }
 }
 ```
+
 9. 可以取消对检查型异常的检查：在java中必须为所有检查型异常提供一个处理器，不过可以利用泛型取消这个机制。
+
 ```text
 @SuppressWarnings("unchecked")
 static <T extends Throwable> void throwAs(Throwable t) throws T{//如果该方法在一个接口中，如果调用接口的throwsAs(e)方法，编译器会认为e是一个非检查型异常。
     throw (T)t;
 }
 ```
+
 10. 注意擦除后的冲突：倘若两个接口类型是同一接口的不同参数化,一个类或类型变量就不能同时作为这两个接口类型的子类，因为擦除后的类型相同，合成桥方法会产生冲突。
 
 ## 泛型类型的继承规则
 
-泛型中无论R和T有什么关系，Pair<R>和Pair<T>都没有任何关系。总是可以将参数化类型转换为一个原始类型。泛型类可以实现和拓展其他泛型类
+泛型中无论R和T有什么关系，Pair<\R>和Pair<\T>都没有任何关系。总是可以将参数化类型转换为一个原始类型。泛型类可以实现和拓展其他泛型类
+
 ```text
 var managerBuddies=new Pair<String>(bob,sue);
 Pair buddies=managerBuddies; // OK  参数化类型转换为一个原始类型
@@ -1096,7 +1102,7 @@ buddies.setFirst(fred); // 警告：转换成原始类型后，无法保证类�
 ## 反射和泛型
 
 1. 泛型Class类
-2. 使用Class<T>参数进行类型匹配
+2. 使用Class<\T>参数进行类型匹配
 3. 虚拟机中的泛型类型信息
 4. 类型字面量
 
@@ -1104,19 +1110,23 @@ buddies.setFirst(fred); // 警告：转换成原始类型后，无法保证类�
 
 ## Java集合框架
 
-1. 集合接口与实现分离：
+1. 集合接口与实现分离
+
 ```text
 队列接口：可以在队尾添加元素，也可以在队首删除元素，也可以在队列中查找元素个数，先进先出。
 队列通常由两种实现：循环数组和链表。
 ```
-2. Collection接口：
-3. 迭代器：Iterator 接口,
+
+1. Collection接口
+2. 迭代器：Iterator 接口
+
 ```test
 for each 循环可以处理任何实现Iterator接口的对象。
 调用forEachRemaining方法并提供lambda表达式,iterator.forEachRemaining(element->System.out.println(element));
 next()和remove()方法存在依赖关系，it.next();it.remove();
 ```
-4. 泛型实用方法：Conllection接口，Set不允许添加重复的元素
+
+1. 泛型实用方法：Conllection接口，Set不允许添加重复的元素
 
 ## 集合框架中的接口
 
@@ -1211,7 +1221,7 @@ Map.ofEntries(Map.entry("asdqwe",1),Map.entry("eqwe",1),Map.entry("weqwe",2),Map
 6. 集合与数组的转换：List.of(a,b,c);toArray(); Arrays.asList(a,b,c); toArray()返回一个Object[]数组，不能改变他的类型，但是可以向toArray(String[]::new)传递一个数组构造器，创建一个指定类型的数组。
 7. 编写自己的算法：创建一个类，实现Comparator接口，并实现compare()方法。
 
-## 遗留的集合：
+## 遗留的集合
 
 1. HashTable类
 2. 枚举:Enumeration()
@@ -1303,13 +1313,16 @@ stop方法来结束线程，stop被废弃是因为当一个线程想要终止另
 2. 高效的映射、集和队列：通过允许并发的访问数据结构的不同部分尽可能减少竞争。集合返回弱一致性的迭代器，这意味着迭代器不一定能反映出他们构造之后所做的全部更改。
 3. 映射条目的原子更新：调用compute方法使可以提供一个键和一个计算新值的函数。这个函数接受键和相关联的值，他会计算新值
 4. 并发散列映射的批操作：
+
 ```text
 search，为每个键或值应用一个函数，知道函数生成一个非null的结果，然后终止搜索，并返回这个函数的结果。
 reduce, 组合所有键或值，治理要使用所提供的一个累加函数。
 forach, 所有键或值应用一个函数
 ```
-5. 并发集视图：
 
+5. 并发集视图：静态的newKeySet方法会生成一个Set<K>，这实际上市ConcurrentHashMap<K,Boolean>的一个包装器。
+6. 写时拷贝数组：CopyOnWriteArrayList和CopyOnWriteArraySet是线程安全的集合，其中所有更改器会建立底层数组的一个副本。构造一个迭代器时，它包含当前数组的一个引用，如果这个数组后来被更改了，迭代器仍然引用原来的数组。
+7. 并行数组算法：
 
 
 
