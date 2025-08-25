@@ -1122,35 +1122,34 @@ next()和remove()方法存在依赖关系，it.next();it.remove();
 
 - Iterable
   - Collection
-    -  List
-    -  Set
-      -  SortedSet
+    - List
+    - Set
+      - SortedSet
         - NavigableSet：
-    -  Queue：队列
+    - Queue：队列
       - Deque：双向队列
-- Map 
+- Map
   - SortedMap
     - NavigableMap
 - Iterator
   - ListIterator：支持双向遍历
 - RandomAccess：不包含任何方法，表示集合中的元素可以以随机访问的方式访问。
-    
 
 ## 具体集合
 
 - AbstractCollection
-    - AbstractList
-      - ArrayList：动态增长或缩减的列表
-      - AbstractSequentialList
-        - LinkedList：链表，在任意位置添加或删除元素。
-    - AbstractSet
-      - HashSet：无序集合，不允许重复元素
-        - LinkedHashSet：插入顺序的集合
-      - TreeSet：有序集合，不允许重复元素
-      - EnumSet：枚举集合
-    - AbstractQueue
-      - PrioityQueue：允许高效删除最小元素的队列
-      - ArrayDueue: 循环数组的双端队列
+  - AbstractList
+    - ArrayList：动态增长或缩减的列表
+    - AbstractSequentialList
+    - LinkedList：链表，在任意位置添加或删除元素。
+  - AbstractSet
+    - HashSet：无序集合，不允许重复元素
+    - LinkedHashSet：插入顺序的集合
+    - TreeSet：有序集合，不允许重复元素
+    - EnumSet：枚举集合
+  - AbstractQueue
+    - PrioityQueue：允许高效删除最小元素的队列
+    - ArrayDueue: 循环数组的双端队列
 - AstractMap
   - HashMap：键值对存储
     - LinkedHashMap：可以记住键值添加顺序
@@ -1179,6 +1178,7 @@ next()和remove()方法存在依赖关系，it.next();it.remove();
 ## 副本与试图
 
 1. 小集合：
+
 ```text
 java9中引入了一些静态方法，可以生成简单直接的拥有给定元素的集或列表。
 of()生成一个不可修改的集合。如果需要修改集合，请将该集合传到构造器中。
@@ -1187,16 +1187,19 @@ Set.of(1,2,3)
 Map.of("asdqwe",1,"eqwe":1,"weqwe":2,"qweqwedf":2)
 Map.ofEntries(Map.entry("asdqwe",1),Map.entry("eqwe",1),Map.entry("weqwe",2),Map.entry("qweqwedf",2))
 ```
-2. 不可修改的副本和视图：如果多个线程访问同一个集合，必须确保集合不会被意外的破坏，对于没有实现线程安全的集合类，可以用集合的副本或视图。
+
+2.不可修改的副本和视图：如果多个线程访问同一个集合，必须确保集合不会被意外的破坏，对于没有实现线程安全的集合类，可以用集合的副本或视图。
+
 ```text
 不可修改的副本：例如copyof()都会创建一个不可修改的副本，如果修改原集合，副本不受影响。如果这个集合刚好本身就是不可修改的，copyof()则直接返回原集合。
 不可修改的视图：Collections类有一些方法(unmodifiableXXX())可以生成集合的不可修改的视图，这些试图对现有集合增加了运行时检查，如果检测到试图修改不可修改的集合，会抛出UnsupportedOperationException。
              如果集合改变，视图会自动更新。视图集合的equals()方法不会调用底层集合的equals()方法，仅仅检查两个对象是否是在同一地址的完全相同的对象。
 ```
-3. 子范围：创建子范围集合，子范围集合是原集合的子集。subList(a,b),第一个索引包含在内，不包含第二个索引。可以对子范围应用任何操作，并且会自动反映到整个列表。
-4. 检查型视图：对泛型类型可能出现的问题提供调试支持。Collections.checkedList();
-5. 同步视图：Collections的synchronizedMap()可以将任何一个映射转换成有同步访问方法的map。
-6. 关于可选操作的说明：
+
+3.子范围：创建子范围集合，子范围集合是原集合的子集。subList(a,b),第一个索引包含在内，不包含第二个索引。可以对子范围应用任何操作，并且会自动反映到整个列表。
+4.检查型视图：对泛型类型可能出现的问题提供调试支持。Collections.checkedList();
+5.同步视图：Collections的synchronizedMap()可以将任何一个映射转换成有同步访问方法的map。
+6.关于可选操作的说明：
 
 ## 算法
 
@@ -1209,6 +1212,7 @@ Map.ofEntries(Map.entry("asdqwe",1),Map.entry("eqwe",1),Map.entry("weqwe",2),Map
 7. 编写自己的算法：创建一个类，实现Comparator接口，并实现compare()方法。
 
 ## 遗留的集合：
+
 1. HashTable类
 2. 枚举:Enumeration()
 3. 属性映射：键值都是字符串，可以保存到属性文件中。Properties类可以使用store方法将属性保存到文件中。
@@ -1235,7 +1239,8 @@ Map.ofEntries(Map.entry("asdqwe",1),Map.entry("eqwe",1),Map.entry("weqwe",2),Map
 
 ## 线程属性
 
-1. 中断线程：
+1.中断线程：
+
 ```text
 interrupt()请求终止一个线程。
 会设置线程的中断状态，这是每个线程都有的一个boolean标志。
@@ -1246,22 +1251,26 @@ Java语言并不要求中断的线程应该终止,仅仅是请求中断。
 interrupted()静态方法检查当前线程是否被中断，并且会清楚该线程的中断状态
 isInterrupted()方法检查当前线程是否被中断，但是不会改变中断状态。
 ```
-2. 守护线程：t.setDaemon(true); 将一个线程转换为守护线程。守护线程会在所有非守护线程执行完毕后结束。
-3. 线程名：t.setName("线程名");
-4. 未捕获异常的处理器：
+
+2.守护线程：t.setDaemon(true); 将一个线程转换为守护线程。守护线程会在所有非守护线程执行完毕后结束。
+3.线程名：t.setName("线程名");
+4.未捕获异常的处理器：
+
 ```text
 在线程死亡前，对于可以传播的异常会传递到一个用于处理未捕获异常的处理器。
 这个处理器必须实现Thread.UncaughtExceptionHandler接口。如果没有安装默认处理器，默认处理器则未null。
 如果没有未单个线程安装处理器，那么处理器就是线程组的处理器。
 线程组是可以一起管理的线程的集合。线程组可以设置一个未捕获异常处理器，当线程组中的线程抛出一个未捕获的异常时，处理器会处理这个异常。
 ```
-5. 线程优先级：t.setPriority(Thread.MAX_PRIORITY);线程调度器会调优先级高的线程
+
+5.线程优先级：t.setPriority(Thread.MAX_PRIORITY);线程调度器会调优先级高的线程
 
 ## 同步
 
 1. 竞态条件的一个例子：
 2. 竞态条件详解：
 3. 锁对象：
+
 ```text
 synchronized,会自动提供一个锁以及相关的“条件”。
 ReentrantLock类允许我们自己提供锁对象，在finally块中解锁。
@@ -1269,26 +1278,37 @@ ReentrantLock类允许我们自己提供锁对象，在finally块中解锁。
 ReentrantLock()这个锁为重入锁，因为线程可以反复获得已拥有的锁。锁有一个持有计数来跟踪对lock方法的嵌套调用，每一次lock之后都需要unlock。持有技术变为0,线程释放锁。
 ReentrantLock(boolean fair),创建一个公平锁。公平锁会按照线程的请求顺序来获取锁。
 ```
-4. 条件对象：一个锁可以有一个或多个关联的条件对象。在构造防范中调用newCondition()方法创建一个条件对象。条件不满足时调用await()进入条件的等待集，暂停当前线程并放弃锁。当条件满足时调用signal()或signalAll()重新激活这个条件的所有线程。
-5. Synchronized关键字：每个对象都有一个内部锁。如果一个方法声明时有synchronized关键字，那么对象的锁将保护整个方法。内部对象所只有一个关联条件。wait()方法将线程增加到等待集中，notifyall/notify()方法解除等待线程的阻塞。
-6. 同步块：private Lock lock=new Object(); synchronized(lock){}
+
+4.条件对象：一个锁可以有一个或多个关联的条件对象。在构造防范中调用newCondition()方法创建一个条件对象。条件不满足时调用await()进入条件的等待集，暂停当前线程并放弃锁。当条件满足时调用signal()或signalAll()重新激活这个条件的所有线程。
+5.Synchronized关键字：每个对象都有一个内部锁。如果一个方法声明时有synchronized关键字，那么对象的锁将保护整个方法。内部对象所只有一个关联条件。wait()方法将线程增加到等待集中，notifyall/notify()方法解除等待线程的阻塞。
+6.同步块：private Lock lock=new Object(); synchronized(lock){}
 7. 监视器概念：监视器是只包含私有字段的类，监视器类的每个对象有一个关联的锁，java中的每一个对象都有一个内部锁和内部条件。
 8. volatile字段: volatile字段是线程安全的，因为volatile字段的修改会通过内存屏障来保证。volatile字段不能保证原子性。
 9. fianl变量：final变量是线程安全的，因为final变量不能被修改。final变量不能保证原子性。
 10. 原子性：atomic包中很多类使用了很高效的机器指令来保证其他操作的原子性。atomic包下的所有原子类都只适用于单个元素，即只能保证一个基本数据类型，对象或者数组的原子性。
 11. 死锁：signal只为一个线程接触阻塞。
 12. 为什么废弃stop和suspend方法：
+
 ```text
 suspend方法来阻塞线程直至另一个线程调用resume，如果调用suspend方法的线程试图获得一个在挂起的线程中锁的资源，线程会死锁。
 stop方法来结束线程，stop被废弃是因为当一个线程想要终止另一个线程时，它无法知道什么时候调用stop方法是安全的，而什么时候会导致对象被破坏。
 ```
-13. 按需初始化：懒加载，在第一次使用时才初始化对象。
-14. 线程局部变量：ThreadLocal辅助类为各个线程提供一个各自的实例。
+
+13.按需初始化：懒加载，在第一次使用时才初始化对象。
+14.线程局部变量：ThreadLocal辅助类为各个线程提供一个各自的实例。
 
 ## 线程安全的合集
+
 1. 阻塞队列：当试图向队列添加元素而队列已满，或试图从队列中移除元素而队列已空时，队列会阻塞。
-
-
+2. 高效的映射、集和队列：通过允许并发的访问数据结构的不同部分尽可能减少竞争。集合返回弱一致性的迭代器，这意味着迭代器不一定能反映出他们构造之后所做的全部更改。
+3. 映射条目的原子更新：调用compute方法使可以提供一个键和一个计算新值的函数。这个函数接受键和相关联的值，他会计算新值
+4. 并发散列映射的批操作：
+```text
+search，为每个键或值应用一个函数，知道函数生成一个非null的结果，然后终止搜索，并返回这个函数的结果。
+reduce, 组合所有键或值，治理要使用所提供的一个累加函数。
+forach, 所有键或值应用一个函数
+```
+5. 并发集视图：
 
 
 
