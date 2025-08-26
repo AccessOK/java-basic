@@ -1344,8 +1344,11 @@ Future：Future()对于具体的RUnnable或者Callable任务的执行结果进�
 ```
 
 3. 控制任务组：ExecutorService.invokeAny()，启动多个线程，相互独立的（无同步）去计算一个结果，当某一个线程得到结果之后，立刻终止所有线程，因为只需要一个结果就够了。
-4. fork-join框架：
+4. fork-join框架：将问题拆解为子问题。
 
+## 异步计算
+
+1. 可完成Future：
 
 
 
