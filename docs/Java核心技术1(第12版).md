@@ -1348,10 +1348,23 @@ Future：Future()对于具体的RUnnable或者Callable任务的执行结果进�
 
 ## 异步计算
 
-1. 可完成Future：
+1. 可完成Future：注册回调，一旦结果可用就会利用该结果调用这个回调。CompletableFuture提供的静态工厂方法，如 runAsync() 和 supplyAsync()。使用whenComplete处理结果和异常。
+2. 组合可完成Future：将异步任务组合为一个处理流水线。
 
 
+## 进程
 
+1. 建立进程：
+
+```test
+Process类再一个单独的操作系统进程中执行一个命令，允许我们与标准输入，输出和错误流交互。ProcessBuider类允许配置Process对象。
+需要向ProcessBuilder提供命令字符串。
+每个进程都有一个工作目录，用来解析相对目录名。默认情况下，进程的工作目录与虚拟机相同，通常是启动java程序的那个目录。
+通过流处理进程的输入输出
+可以通过进程构建器配置环境变量
+```
+
+2. 运行进程： 
 
 
 
