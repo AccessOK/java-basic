@@ -1350,7 +1350,7 @@ Future：Future()对于具体的RUnnable或者Callable任务的执行结果进�
 
 1. 可完成Future：注册回调，一旦结果可用就会利用该结果调用这个回调。CompletableFuture提供的静态工厂方法，如 runAsync() 和 supplyAsync()。使用whenComplete处理结果和异常。
 2. 组合可完成Future：将异步任务组合为一个处理流水线。
-
+3. 用户界面回调中的长时间运行任务：
 
 ## 进程
 
@@ -1364,7 +1364,8 @@ Process类再一个单独的操作系统进程中执行一个命令，允许我�
 可以通过进程构建器配置环境变量
 ```
 
-2. 运行进程： 
+2. 运行进程： 配置构建器之后，调用star方法发启动进程。调用waitFor()等待进程完成。
+3. 进程句柄：ProcessHandle()可以获得程序启动的一个进程的更多信息。
 
 
 
