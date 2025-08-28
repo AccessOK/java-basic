@@ -1,5 +1,10 @@
 {
     "recommendations": [
-        "ms-ceintl.vscode-language-pack-zh-hans"
+        "ms-ceintl.vscode-language-pack-zh-hans",
+        "vscjava.vscode-java-debug",
+        "vscjava.vscode-java-pack",
+        "oracle.oracle-java",
+        "redhat.java",
+        "vscjava.vscode-java-dependency"
     ]
 }

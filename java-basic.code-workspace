@@ -4,5 +4,7 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"java.jdt.ls.java.home": "/opt/java/jdk-24.0.1/"
+	}
 }

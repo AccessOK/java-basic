@@ -1,0 +1,5 @@
+System.out.println(count);
+            count=words.stream().filter(w-> w.length()>4).count();
+            System.out.println(count);
+            count=words.parallelStream().filter(w -> w.length()>4).count();
+            System.out.println(count);
